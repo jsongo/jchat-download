@@ -46,7 +46,7 @@
 		    height: 100%;
 		    font-size: 12px;
 		    font-family: Microsoft YaHei, Helvitica, Verdana, Tohoma, Arial, san-serif;
-		    background: #332F87 url('./bg.jpg') no-repeat center 0/100%;
+		    background: #332F87 url('./bg.jpg') no-repeat center 0/100% 100%;
 		}
 		img {
 		    display: block;
@@ -109,15 +109,15 @@
 		}
 		.wrapper .qrcode {
 		    position: absolute;
-		    top: 30rem;
+		    top: 28rem;
 		    left: 0;
 		    width: 100%;
 		    text-align: center;
 		}
 		.wrapper .qrcode>img {
 		    margin: 0 auto;
-		    width: 10.0rem;
-		    height: 10.0rem;
+		    width: 9rem;
+		    height: 9rem;
 		}
 		.wrapper .qrcode>p {
 		    margin-top: 0.46rem;
@@ -135,23 +135,23 @@
 		    height: 6.42rem;
 		}
 		.animation-twinkle {
-		    -webkit-animation: twinkle 1s .2s ease both;
-		    animation: twinkle 1s .2s ease both;
+		    -webkit-animation: twinkle .5s ease both;
+		    animation: twinkle .5s ease both;
 		}
 		@-webkit-keyframes twinkle {
-		    0%, 50%, 100% {
-		        opacity: 1;
-		    }
-		    25%, 75% {
+		    0% {
 		        opacity: 0;
+		    }
+		    100% {
+		        opacity: 1;
 		    }
 		}
 		@keyframes twinkle {
-		    0%, 50%, 100% {
-		        opacity: 1;
-		    }
-		    25%, 75% {
+		    0% {
 		        opacity: 0;
+		    }
+		    100% {
+		        opacity: 1;
 		    }
 		}
 	</style>
@@ -177,9 +177,12 @@
 		var popupEl = document.getElementById('popup');
 		var appBtnEl = document.getElementById('app_btn');
 
+		// IOS兼容CSS:active效果
+		document.body.addEventListener('touchstart',function(){});
+
 		if (Browser.versions.ios) {
 			appBtnEl.innerHTML = '<span class="ios-icon"></span> IOS 下载';
-			if (Browser.versions.weixin) {
+			if (!Browser.versions.weixin) {
 				popupEl.style.display = 'block';
 				appBtnEl.addEventListener('click', winxinEvent, false);
 			} else {
@@ -191,7 +194,7 @@
 
 		if (Browser.versions.android) {
 			appBtnEl.innerHTML = '<span class="android-icon"></span> Android 下载';
-			if (Browser.versions.weixin) {
+			if (!Browser.versions.weixin) {
 				popupEl.style.display = 'block';
 				appBtnEl.addEventListener('click', winxinEvent, false);
 			} else {
@@ -209,7 +212,7 @@
 			popupEl.className = cls + ' animation-twinkle';
 			setTimeout(function() {
 				popupEl.className = cls.replace(' animation-twinkle', '');
-			}, 1200);
+			}, 500);
 		}
 	</script>
 </body>
