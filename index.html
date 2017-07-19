@@ -182,7 +182,7 @@
 
 		if (Browser.versions.ios) {
 			appBtnEl.innerHTML = '<span class="ios-icon"></span> IOS 下载';
-			if (!Browser.versions.weixin) {
+			if (Browser.versions.weixin) {
 				popupEl.style.display = 'block';
 				appBtnEl.addEventListener('click', winxinEvent, false);
 			} else {
@@ -194,7 +194,7 @@
 
 		if (Browser.versions.android) {
 			appBtnEl.innerHTML = '<span class="android-icon"></span> Android 下载';
-			if (!Browser.versions.weixin) {
+			if (Browser.versions.weixin) {
 				popupEl.style.display = 'block';
 				appBtnEl.addEventListener('click', winxinEvent, false);
 			} else {
