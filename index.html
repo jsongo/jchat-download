@@ -109,6 +109,13 @@
 		    height: 1.42rem;
 		    background: url('./android_icon.png') no-repeat center 0/100%;
 		}
+		.wrapper .content .ios-tip {
+			display: none;
+			margin-top: 0.57rem;
+			font-size: 1rem;
+			color: #fff;
+			letter-spacing: 0.07rem;
+		}
 		.wrapper .qrcode {
 		    position: absolute;
 		    top: 26.31rem;
@@ -178,6 +185,7 @@
 			<a class="app-btn" id="android_btn" href="javascript:void(0);">
 				<span class="android-icon"></span> Android 下载
 			</a>
+			<p class="ios-tip" id="ios_tip">可在桌面查看安装情况</p>
 		</div>
 		<div class="qrcode">
 			<img src="./qrcode.png" alt="极光 IM Demo">
@@ -190,7 +198,7 @@
 	<script>
 		var iosPlistLink = 'itms-services://?action=download-manifest&url=https://sdkfiledl.jiguang.cn/manifest.plist';
 		var iosIpaLink = 'https://sdkfiledl.jiguang.cn/JChat_iOS.ipa';
-		var androidLink = 'https://sdkfiledl.jiguang.cn/jchat_v2.0.0.apk';
+		var androidLink = 'https://sdkfiledl.jiguang.cn/JChat_Android.apk';
 
 		// IOS兼容CSS:active效果
 		document.body.addEventListener('touchstart',function(){});
@@ -199,6 +207,7 @@
 		var popupEl = document.getElementById('popup');
 		var iosBtnEl = document.getElementById('ios_btn');
 		var androidBtnEl = document.getElementById('android_btn');
+		var iosTipEl = document.getElementById('ios_tip');
 
 		if (Browser.versions.mobile) {
 			if (Browser.versions.ios) {
@@ -206,7 +215,7 @@
 				if (Browser.versions.weixin) {
 					winxinChange(iosBtnEl);
 				} else {
-					downloadEvent(iosBtnEl, iosPlistLink);
+					downloadEvent(iosBtnEl, iosPlistLink, true);
 				}
 			}
 			if (Browser.versions.android) {
@@ -245,8 +254,11 @@
 			}, 500);
 		}
 
-		function downloadEvent(btn, link) {
+		function downloadEvent(btn, link, isShowIosTip) {
 			btn.addEventListener('click', function() {
+				if (isShowIosTip) {
+					iosTipEl.style.display = 'block';
+				}
 				window.location.href = link;
 			}, false);
 		}
