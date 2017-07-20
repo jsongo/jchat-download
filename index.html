@@ -79,8 +79,8 @@
 		    font-size: 1.42rem;
 		}
 		.wrapper .content a.app-btn {
+			display: none;
 		    margin: 1.12rem auto 0 auto;
-		    display: block;
 		    width: 13.51rem;
 		    height: 3.2rem;
 		    line-height: 3.2rem;
@@ -97,7 +97,7 @@
 		.wrapper .content a.app-btn>span {
 		    margin-right: 0.5rem;
 		    display: inline-block;
-		    vertical-align: middle;
+		    vertical-align: text-bottom;
 		}
 		.wrapper .content a.app-btn>span.ios-icon {
 			width: 1.16rem;
@@ -105,8 +105,8 @@
 		    background: url('./ios_icon.png') no-repeat center 0/100%;
 		}
 		.wrapper .content a.app-btn>span.android-icon {
-			width: 1.87rem;
-		    height: 2.24rem;
+			width: 1.16rem;
+		    height: 1.42rem;
 		    background: url('./android_icon.png') no-repeat center 0/100%;
 		}
 		.wrapper .qrcode {
@@ -128,6 +128,7 @@
 		    color: #fff;
 		}
 		.wrapper .popup {
+			display: none;
 		    position: absolute;
 		    top: 0.54rem;
 		    right: 1.96rem;
@@ -171,57 +172,66 @@
 		<div class="content">
 			<img class="app-icon" src="./app_icon.png" alt="极光 IM Demo 体验图标">
 			<p class="app-title">极光 IM Demo 体验</p>
-			<a class="app-btn" id="app_btn" href="javascript:void(0);"></a>
+			<a class="app-btn" id="ios_btn" href="javascript:void(0);">
+				<span class="ios-icon"></span> iOS 下载
+			</a>
+			<a class="app-btn" id="android_btn" href="javascript:void(0);">
+				<span class="android-icon"></span> Android 下载
+			</a>
 		</div>
 		<div class="qrcode">
 			<img src="./qrcode.png" alt="极光 IM Demo">
 			<p>扫码下载极光 IM Demo</p>
 		</div>
-		<div class="popup" id="popup" style="display: none;">
+		<div class="popup" id="popup">
 			<img src="./popup.png" alt="在浏览器中打开">
 		</div>
 	</div>
 	<script>
-		var iosLink = 'itms-services://?action=download-manifest&url=https://sdkfiledl.jiguang.cn/manifest.plist';
+		var iosPlistLink = 'itms-services://?action=download-manifest&url=https://sdkfiledl.jiguang.cn/manifest.plist';
+		var iosIpaLink = 'https://sdkfiledl.jiguang.cn/JChat_iOS.ipa';
 		var androidLink = 'https://sdkfiledl.jiguang.cn/jchat_v2.0.0.apk';
-		var wrapperEl = document.getElementById('wrapper');
-		var popupEl = document.getElementById('popup');
-		var appBtnEl = document.getElementById('app_btn');
 
 		// IOS兼容CSS:active效果
 		document.body.addEventListener('touchstart',function(){});
 
-		if (Browser.versions.ios) {
-			appBtnEl.innerHTML = '<span class="ios-icon"></span> iOS 下载';
-			if (Browser.versions.weixin) {
-				popupEl.style.display = 'block';
-				winxinChange();
-				appBtnEl.addEventListener('click', winxinEvent, false);
-			} else {
-				appBtnEl.addEventListener('click', function() {
-					window.location.href = iosLink;
-				}, false);
+		var wrapperEl = document.getElementById('wrapper');
+		var popupEl = document.getElementById('popup');
+		var iosBtnEl = document.getElementById('ios_btn');
+		var androidBtnEl = document.getElementById('android_btn');
+
+		if (Browser.versions.mobile) {
+			if (Browser.versions.ios) {
+				iosBtnEl.style.display = 'block';
+				if (Browser.versions.weixin) {
+					winxinChange(iosBtnEl);
+				} else {
+					downloadEvent(iosBtnEl, iosPlistLink);
+				}
 			}
+			if (Browser.versions.android) {
+				androidBtnEl.style.display = 'block';
+				if (Browser.versions.weixin) {
+					winxinChange(androidBtnEl);
+				} else {
+					downloadEvent(androidBtnEl, androidLink);
+				}
+			}
+		} else {
+			iosBtnEl.style.display = 'block';
+			androidBtnEl.style.display = 'block';
+			downloadEvent(iosBtnEl, iosIpaLink);
+			downloadEvent(androidBtnEl, androidLink);
 		}
 
-		if (Browser.versions.android) {
-			appBtnEl.innerHTML = '<span class="android-icon"></span> Android 下载';
-			if (Browser.versions.weixin) {
-				popupEl.style.display = 'block';
-				winxinChange();
-				appBtnEl.addEventListener('click', winxinEvent, false);
-			} else {
-				appBtnEl.addEventListener('click', function() {
-					window.location.href = androidLink;
-				}, false);
-			}
-		}
-
-		function winxinChange() {
+		function winxinChange(btn) {
 			var cls = wrapperEl.className;
 			if (cls.indexOf('weixin-wrapper') === -1) {
 				wrapperEl.className = cls + ' weixin-wrapper';
 			}
+
+			popupEl.style.display = 'block';
+			btn.addEventListener('click', winxinEvent, false);
 		}
 
 		function winxinEvent() {
@@ -233,6 +243,12 @@
 			setTimeout(function() {
 				popupEl.className = cls.replace(' animation-twinkle', '');
 			}, 500);
+		}
+
+		function downloadEvent(btn, link) {
+			btn.addEventListener('click', function() {
+				window.location.href = link;
+			}, false);
 		}
 	</script>
 </body>
